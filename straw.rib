@@ -1,0 +1,16 @@
+##RenderMan RIB
+#start our world
+version 3.04999995
+Display "straw.exr" "it" "rgba" 
+Format 2048 2048 1
+Projection "perspective" "uniform float fov" [45]
+WorldBegin 
+Translate 0 0 5
+TransformBegin 
+Translate 0 0 2
+Rotate 90 1 0 0
+Scale 0.100000001 0.100000001 200
+Torus 0.5 0.00999999978 0 360 360 
+TransformEnd 
+#end our world
+WorldEnd 
