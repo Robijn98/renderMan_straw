@@ -1,0 +1,9 @@
+shader strawDisplacement(
+    output float result = 0.0
+)
+{
+    
+    float n = noise("perlin", P);
+    P += N * 0.5;
+    result = mix(result, 0.1, n); 
+}

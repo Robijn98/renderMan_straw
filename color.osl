@@ -1,0 +1,50 @@
+shader strawStripes
+(
+    color base = color(1,0,0),
+    color helix = color(0,1,0),
+    color inside = color(0,0,1),
+
+    float twists = 9.0,
+    float radius = 0.5,
+    float helix_width = 0.3,
+
+    float minor_radius = 0.1,
+    float major_radius = 5,
+
+    output color Cout = 0,
+)
+{
+
+    //inside outside color difference
+    point Pos = transform("object", P);
+
+    // helix
+    float s = mod((u) * 2,1);
+    float t = mod((v) * 20,1);
+
+
+    float linePos = 0;
+    //source Harry 
+    linePos = ((smoothstep(0.05,0.05,abs(s-t)<(helix_width))*-1)+smoothstep(0.05,0.05,abs(s-t)<(1-helix_width)));
+
+    color helixSwirl = mix(base, helix, linePos);
+
+
+    float Cx = 0.0;
+    float Cy = 0.0;
+
+    float Diff_x = Pos[0] - Cx;
+    float Diff_y = Pos[1] - Cy;
+
+    float Dist = (Diff_x*Diff_x) + (Diff_y * Diff_y);
+    Dist = sqrt(Dist);
+
+    float tube_dist = Dist - major_radius;
+
+    float smoothness = 0.01;
+    float blend = smoothstep(-smoothness, smoothness, tube_dist);
+    Cout = mix(base, helixSwirl, blend);
+
+
+
+}

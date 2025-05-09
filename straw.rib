@@ -1,16 +1,45 @@
-##RenderMan RIB
-#start our world
-version 3.04999995
-Display "straw.exr" "it" "rgba" 
-Format 2048 2048 1
+Display "straw.exr" "file" "rgb" 
+Format 2048 2048 1.0
+
+# Hider "raytrace" "int incremental" [1] "int maxsamples" [10]
+# Integrator "PxrPathTracer" "integrator"
+
+# PixelFilter "gaussian" 2 2
+
+
 Projection "perspective" "uniform float fov" [45]
+
+Option "searchpath" "shader" ["./"]
+
 WorldBegin 
-Translate 0 0 5
-TransformBegin 
-Translate 0 0 2
-Rotate 90 1 0 0
-Scale 0.100000001 0.100000001 200
-Torus 0.5 0.00999999978 0 360 360 
-TransformEnd 
-#end our world
-WorldEnd 
+
+    AttributeBegin 
+
+        Translate 0 0 30
+        Rotate 65 1 0 0
+        #Scale 0.5 0.5 10
+        Scale 0.0500000007 0.0500000007 100
+
+    Attribute "dice" "float micropolygonlength" [0.5]
+    Attribute "displacementbound" "sphere" [1.0]
+
+        # Pattern "strawDisplacement" "strawDisplacementPattern" 
+
+        # Displace "PxrDisplace" "strawDisp" 
+        #     "reference float dispScalar" ["strawDisplacementPattern:result"]        
+        
+        Pattern "strawStripes" "straw" 
+            "color base" [1 0 0] 
+            "color helix" [0 1 0]
+
+
+        Bxdf "PxrDiffuse" "diffuseShader" 
+            "reference color diffuseColor" ["straw:Cout"]
+
+
+        Torus 5 0.1 0 360 360 
+
+    AttributeEnd
+
+
+WorldEnd

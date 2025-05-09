@@ -1,0 +1,24 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.13.0.@PROJECT_VERSION_TWEAK@"dev"
+# options: 
+shader strawDisplacement
+oparam	float	result	0		%read{3,3} %write{3,3}
+global	point	P	%read{0,2} %write{2,2}
+global	normal	N	%read{1,1} %write{2147483647,-1}
+local	float	n	%read{3,3} %write{0,0}
+const	string	$const1	"perlin"		%read{0,0} %write{2147483647,-1}
+const	float	$const2	0.5		%read{1,1} %write{2147483647,-1}
+temp	normal	$tmp1	%read{2,2} %write{1,1}
+const	float	$const3	0.100000001		%read{3,3} %write{2147483647,-1}
+code ___main___
+# strawDisplacement.osl:6
+#     float n = noise("perlin", P);
+	noise		n $const1 P 	%filename{"strawDisplacement.osl"} %line{6} %argrw{"wrr"}
+# strawDisplacement.osl:7
+#     P += N * 0.5;
+	mul		$tmp1 N $const2 	%line{7} %argrw{"wrr"}
+	add		P P $tmp1 	%argrw{"wrr"}
+# strawDisplacement.osl:8
+#     result = mix(result, 0.1, n); 
+	mix		result result $const3 n 	%line{8} %argrw{"wrrr"}
+	end
