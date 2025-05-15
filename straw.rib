@@ -1,0 +1,148 @@
+Display "straw.exr" "file" "rgb"
+Format 4096 2096 1.0
+
+Projection "perspective" "uniform float fov" [45]
+Option "searchpath" "shader" ["./"]
+Option "searchpath" "texture" ["./textures"]
+
+Hider "raytrace" "int incremental" [1] "int maxsamples" [50]
+
+Integrator "PxrPathTracer" "integrator"
+PixelVariance 0.01
+
+
+
+WorldBegin
+
+    #lights
+    AttributeBegin
+        Rotate -90 1 0 0
+
+        Light "PxrDomeLight" "domeLight" "string lightColorMap" ["./textures/photo_studio_01_4k.tx"]
+
+
+    AttributeEnd    
+    # Top-level transform
+    TransformBegin
+        Translate 3 3 30
+        Rotate 50 1 0 0
+    
+        # Straw Assembly
+        AttributeBegin
+            TransformBegin
+                Translate -9 -13.2 0
+                Rotate -50 1 0 0
+                Rotate 40 0 1 0 
+                Scale 1 1 1 
+                
+                # Outer cylinder
+                AttributeBegin
+                    Attribute "dice" "float micropolygonlength" [0.5]
+                    Attribute "displacementbound" "sphere" [0.5]
+
+                    Pattern "strawDisplacement" "strawDisplacementPattern" 
+                        "float taperWidth" [0.001]
+                        "float inwardFade" [-0.01]
+
+                    Displace "PxrDisplace" "strawDisp" 
+                        "reference float dispScalar" ["strawDisplacementPattern:result"]
+
+                    Pattern "strawStripes" "straw" 
+                        "color base" [1 1 0.9] 
+                        "color helix" [0.7 0 0]
+                        "int coffeeBool" [0]
+                        "color coffee" [0.7686 0.5725 0.2431]
+
+                    Bxdf "PxrDiffuse" "diffuseShader" 
+                        "reference color diffuseColor" ["straw:Cout"]
+
+                    Cylinder 0.2 0 20 360
+                AttributeEnd
+
+                # Inner cylinder
+                AttributeBegin
+                    Rotate 50 0 0 1
+                    Attribute "dice" "float micropolygonlength" [0.5]
+                    Attribute "displacementbound" "sphere" [0.5]
+
+                    Pattern "insideDisplacement" "insideDisplacementPattern"
+
+                    Displace "PxrDisplace" "insideDisp"
+                        "reference float dispScalar" ["insideDisplacementPattern:result"]
+
+                    Pattern "insideStraw" "inside" 
+                        "color inside" [1 1 0.9]
+
+                    Bxdf "PxrDiffuse" "diffuseShader" 
+                        "reference color diffuseColor" ["inside:Cout"]
+
+                    ReverseOrientation
+                    Cylinder 0.18 0 20 360
+                    ReverseOrientation
+                AttributeEnd
+
+                # Top cap
+                AttributeBegin
+                    Attribute "dice" "float micropolygonlength" [0.5]
+                    Attribute "displacementbound" "sphere" [0.5]
+
+                    Pattern "capStraw" "cap" 
+                        "color straw" [1 1 0.9]
+                        "color colorful" [0.7 0 0]
+                        "float major_radius" [0.18]
+
+                    Bxdf "PxrDiffuse" "diffuseShader" 
+                        "reference color diffuseColor" ["cap:Cout"]
+
+                    Pattern "capDisplacement" "capDisplacementPattern"
+                        "float major_radius" [0.18]
+
+                    Displace "PxrDisplace" "capDisp" 
+                        "reference float dispScalar" ["capDisplacementPattern:result"]
+
+                    Translate 0 0 0.001
+                    Scale 1 1 0.1
+                    Torus 0.18 0.015 0 360 360
+                AttributeEnd
+
+                # Bottom cap
+                AttributeBegin
+                    Pattern "capStraw" "cap" 
+                        "color caps" [1 1 0.9]
+
+                    Bxdf "PxrDiffuse" "diffuseShader" 
+                        "reference color diffuseColor" ["cap:Cout"]
+
+                    Translate 0 0 20
+                    Scale 1 1 0.01
+                    Torus 0.18 0.015 0 360 360 
+                AttributeEnd
+
+            TransformEnd
+        AttributeEnd
+
+        #Table geometry
+        AttributeBegin
+            TransformBegin
+                Translate 0 -5 10
+                Rotate 40 1 0 0
+                Rotate 10 0 0 1 
+                Scale 3 2 1
+                
+
+                #Scale 20 1 10
+
+                Attribute "displacementbound" "sphere" [0.5] "coordinatesystem" ["object"]
+                
+                Pattern "wood" "woodPattern" 
+
+                Bxdf "PxrDisney" "woodMaterial"
+                "reference color baseColor" ["woodPattern:Cout"]
+
+                Patch "bilinear" "P" [ -10 -10 -2.15  -10 10 -2.15  10 -10 -2.15 10 10 -2.15]
+            TransformEnd
+         AttributeEnd
+
+    TransformEnd
+
+WorldEnd

@@ -1,0 +1,9 @@
+shader insideStraw
+(
+    color inside = color(1,1,1),
+    output color Cout = 0,
+
+)
+{
+    Cout = inside;
+}

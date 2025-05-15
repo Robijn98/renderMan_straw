@@ -1,0 +1,29 @@
+shader insideDisplacement(
+    float taperWidth = 0.001,
+    float inwardFade = 0.009,
+    output float result = 0.0,
+
+)
+{
+
+    float twists = 1.0;
+    float helix_width = 0.002;
+
+    float s = mod((u) * -1, 1);
+    float t = mod((v) * 8, 1);
+
+    float stripeBoundary1 = abs(s - t) < helix_width;
+    float linePos1 = smoothstep(0.05, 0.05, stripeBoundary1);
+
+    float stripeBoundary2 = abs(s - t) < (1 - helix_width);
+    float linePos2 = smoothstep(0.05, 0.05, stripeBoundary2);
+
+    float linePos = linePos1 + linePos2;
+    float stagger = noise("uperlin", u * 5) * -0.01; 
+
+    result += (linePos * stagger * -1);
+
+
+
+}
+ 

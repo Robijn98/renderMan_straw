@@ -1,0 +1,71 @@
+shader strawStripes
+(
+    color base = color(0,0,0),
+    color helix = color(0,1,0),
+
+    float minor_radius = 0.2,
+    float major_radius = 0.2,
+
+    int coffeeBool = 0,
+    color coffee = color(0.7686, 0.5725, 0.2431),
+
+    output color Cout = 0,
+)
+{
+    //coloured helix
+    float twists = 1.0;
+    float helix_width = 0.23;
+
+    point Pos = transform("object", P);
+
+    float s = mod((u) * -1,1);
+    float t = mod((v) * 8,1);
+
+    float stripeBoundary1 = abs(s - t) < helix_width;
+    float linePos1 = smoothstep(0.05, 0.05, stripeBoundary1);
+
+
+    float stripeBoundary2 = abs(s - t) < (1 - helix_width);
+    float linePos2 = smoothstep(0.05, 0.05, stripeBoundary2);
+
+    float linePos = (linePos1 * -1) + linePos2;
+
+    //noise on helix color for texture
+    float helix_n = noise("simplex", P*100);
+    color helix_noise = mix(helix, 0.05, helix_n);
+
+
+    color helix_coloured = mix(base, helix_noise, linePos);
+
+
+    
+    //displaced helix
+    helix_width = 0.005;
+    color offset_helix = color(0.7,0.7,0.7);
+
+    stripeBoundary1 = abs(s - t) < helix_width;
+    linePos1 = smoothstep(0.05, 0.05, stripeBoundary1);
+
+    stripeBoundary2 = abs(s - t) < (1 - helix_width);
+    linePos2 = smoothstep(0.05, 0.05, stripeBoundary2);
+
+     linePos = (linePos1 * -1) + linePos2;
+
+
+    //change color of helix based on if coffee is involved
+    color helix_inside = 0;
+
+    if(coffeeBool == 0)
+    {
+        helix_inside = mix(offset_helix, helix_coloured, linePos);
+        Cout = helix_inside;
+    }
+    else
+    {
+        offset_helix = coffee;
+        helix_inside = mix(offset_helix, helix_coloured, linePos);
+        Cout = helix_inside;
+    }
+
+
+}

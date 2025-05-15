@@ -1,0 +1,37 @@
+shader capStraw
+(
+    color colorful = color(1,0,0),
+    color straw = color(1,1,1),
+    output color Cout = 0,
+    float major_radius = 0.19,
+
+)
+{
+    point Pos = transform("object", P);
+    float r = sqrt(Pos[0]*Pos[0] + Pos[1]*Pos[1]);
+    float radial = r - major_radius;
+
+    float u_coord = mod(u, 1.0);
+
+    float chaos = noise("simplex", P*20);
+
+    if(radial < 0.0)
+    {
+        //innerface
+        Cout = straw;
+    }    
+    else if(u_coord < 0.25 || u_coord > 0.77)
+    {
+        Cout = straw;
+    }
+    else
+    {
+        float helix_n = noise("simplex", P*100);
+        color helix_noise = mix(colorful, 0.05, helix_n);
+        Cout = mix(helix_noise, straw, chaos * 1.5);
+    }
+
+
+
+}
+

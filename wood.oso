@@ -1,0 +1,23 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.13.0.@PROJECT_VERSION_TWEAK@"dev"
+# options: 
+shader wood
+oparam	color	Cout	0 0 0		%read{2147483647,-1} %write{0,0}
+oparam	float	Bout	0		%read{2147483647,-1} %write{3,3}
+global	float	u	%read{0,1} %write{2147483647,-1} %derivs
+global	float	v	%read{0,2} %write{2147483647,-1} %derivs
+const	string	$const1	"/home/s5725067/myRepos/renderMan_straw/textures/Hackberry_pxr128.tx"		%read{0,0} %write{2147483647,-1}
+const	string	$const2	"textures/Hackberry_pxr128_bmp.tx"		%read{3,3} %write{2147483647,-1}
+temp	float	$tmp1	%read{3,3} %write{1,1} %derivs
+const	float	$const4	10		%read{1,2} %write{2147483647,-1}
+temp	float	$tmp2	%read{3,3} %write{2,2} %derivs
+code ___main___
+# wood.osl:8
+#     Cout = (color)texture("/home/s5725067/myRepos/renderMan_straw/textures/Hackberry_pxr128.tx", u, v);
+	texture		Cout $const1 u v 	%filename{"wood.osl"} %line{8} %argrw{"wrrr"} %argderivs{2,3}
+# wood.osl:9
+#     Bout = (float)texture("textures/Hackberry_pxr128_bmp.tx", u*10, v*10);
+	mul		$tmp1 u $const4 	%line{9} %argrw{"wrr"}
+	mul		$tmp2 v $const4 	%argrw{"wrr"}
+	texture		Bout $const2 $tmp1 $tmp2 	%argrw{"wrrr"} %argderivs{2,3}
+	end

@@ -1,0 +1,11 @@
+shader wood
+(
+    output color Cout = 0,
+    output float Bout = 0,
+)
+{
+
+    Cout = (color)texture("/home/s5725067/myRepos/renderMan_straw/textures/Hackberry_pxr128.tx", u, v);
+    Bout = (float)texture("textures/Hackberry_pxr128_bmp.tx", u*10, v*10);
+
+}
