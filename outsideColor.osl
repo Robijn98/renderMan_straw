@@ -8,6 +8,9 @@ shader strawStripes
 
     int coffeeBool = 0,
     color coffee = color(0.7686, 0.5725, 0.2431),
+    float stain_area_start = 0.01,
+    float stain_area_rad = 0.2, 
+    float stain_multiplyer = 0.25,
 
     output color Cout = 0,
 )
@@ -95,6 +98,38 @@ shader strawStripes
         helix_inside = mix(offset_helix, helix_coloured, linePos);
         Cout = helix_inside;
     }
+    
+    // --- coffee stains -------------------------------------------------
+    if(coffeeBool == 1)
+    {
+        float stainWidth = 0.03;                 
+        float edge_noise_scale = 3.0;             
+        float color_noise_scale = 1.2;          
+        float color_variation_amount = 0.1;  
+
+        point worldPos = transform("world", P);
+
+        float stains = noise("perlin", worldPos * stain_multiplyer);
+
+        // Edge breakup noise
+        float edgeBreakup = noise("perlin", worldPos * edge_noise_scale);
+
+        float stainDents = smoothstep(0.4 - stainWidth, 0.4 + stainWidth, stains * 2 + edgeBreakup * 0.2);
+
+        float stainMask = (v > stain_area_start && v < stain_area_start + stain_area_rad) ? 1.0 : 0.0;
+
+        //color variation
+        float colorShift = noise("simplex", worldPos * color_noise_scale);
+        color varied_coffee = coffee + color_variation_amount * (colorShift - 0.5);
+
+        float stain_strength = stainDents * stainMask;
+        color stain = mix(color(1.0), varied_coffee, stain_strength);
+
+        // Darken base color with stain
+        Cout *= stain;
+    }
+
+
 
 
 }

@@ -1,8 +1,9 @@
 shader strawDisplacement(
     float taperWidth = 0.001,
     float inwardFade = 0.009,
-    float dent_area_start = 0.15,
-    float dent_area_rad = 0.01,
+    float dent_area_rad = 0.05,
+    float stripe_area_start = 0.15,
+    float stripe_area_rad = 0.01,
     float dent_noise = 0.1,
     output float result = 0.0,
     
@@ -34,19 +35,36 @@ shader strawDisplacement(
     
     result -= endTaper * inwardFade;
 
+
+    // drink area dents --------------------------------------------------
     float stripeFreq = 10.0;  
     float stripeWidth = 0.05; 
 
+
     point worldPos = transform("world", P);
 
-    // Create stripe pattern
+    // Create stripe pattern 
     float stripes = noise("perlin", point(worldPos[0] * stripeFreq, worldPos[1], worldPos[2] * dent_noise));
     float stripeDents = smoothstep(0.4 - stripeWidth, 0.4 + stripeWidth, stripes);
 
-    float dentMask = (v > dent_area_start && v < dent_area_start+dent_area_rad) ? 1.0 : 0.0;
+    float stripeMask = (v > stripe_area_start && v < stripe_area_start+stripe_area_rad) ? 1.0 : 0.0;
 
-    // Apply dent only in that region
-    result += mix(result, -0.0001, stripeDents) * dentMask;
+    // Apply dent only in region
+    result += mix(result, -0.0001, stripeDents) * stripeMask;
+
+    //dents top straw -------------------------------------------------------
+    float edge_softness = 0.002; 
+    float dent_start = 0.003; 
+    float dent_end = dent_start + dent_area_rad;
+
+    float drink_dents = noise("perlin", worldPos);
+
+    float fadeIn  = smoothstep(dent_start - edge_softness, dent_start + edge_softness, v);
+    float fadeOut = smoothstep(dent_end - edge_softness, dent_end + edge_softness, v);
+
+    float dentMask = fadeIn * (1.0 - fadeOut);
+    
+    result += mix(result, 0.019, drink_dents) * dentMask;
 
 
 }
