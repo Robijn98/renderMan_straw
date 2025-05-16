@@ -2,9 +2,9 @@ OpenShadingLanguage 1.00
 # Compiled by oslc 1.13.0.@PROJECT_VERSION_TWEAK@"dev"
 # options: 
 shader capStraw
-param	color	colorful	1 0 0		%read{32,32} %write{2147483647,-1}
-param	color	straw	1 1 1		%read{20,34} %write{2147483647,-1}
-oparam	color	Cout	0 0 0		%read{2147483647,-1} %write{20,34}
+param	color	colorful	1 0 0		%read{31,31} %write{2147483647,-1}
+param	color	straw	1 1 1		%read{20,32} %write{2147483647,-1}
+oparam	color	Cout	0 0 0		%read{2147483647,-1} %write{20,32}
 param	float	major_radius	0.189999998		%read{10,10} %write{2147483647,-1}
 global	point	P	%read{1,29} %write{2147483647,-1}
 global	float	u	%read{12,15} %write{2147483647,-1}
@@ -12,9 +12,9 @@ local	point	Pos	%read{2,6} %write{1,1}
 local	float	r	%read{10,10} %write{9,9}
 local	float	radial	%read{18,18} %write{10,10}
 local	float	u_coord	%read{21,24} %write{15,15}
-local	float	chaos	%read{33,33} %write{17,17}
-local	float	___347_helix_n	%read{32,32} %write{30,30}
-local	color	___347_helix_noise	%read{34,34} %write{32,32}
+local	float	chaos	%read{32,32} %write{17,17}
+local	float	___347_helix_n	%read{31,31} %write{30,30}
+local	color	___347_helix_noise	%read{32,32} %write{31,31}
 const	string	$const1	"object"		%read{1,1} %write{2147483647,-1}
 const	string	$const2	"transform"		%read{0,0} %write{2147483647,-1}
 const	string	$const3	"common"		%read{1,1} %write{2147483647,-1}
@@ -32,23 +32,20 @@ const	string	$const7	"mod"		%read{11,11} %write{2147483647,-1}
 temp	float	$tmp8	%read{14,14} %write{13,13}
 temp	float	$tmp9	%read{13,13} %write{12,12}
 temp	float	$tmp10	%read{15,15} %write{14,14}
-const	string	$const8	"simplex"		%read{17,30} %write{2147483647,-1}
+const	string	$const8	"simplex"		%read{17,17} %write{2147483647,-1}
 temp	point	$tmp11	%read{17,17} %write{16,16}
 const	float	$const10	20		%read{16,16} %write{2147483647,-1}
 const	float	$const11	0		%read{18,18} %write{2147483647,-1}
 temp	int	$tmp12	%read{19,19} %write{18,18}
-const	float	$const12	0.25		%read{21,21} %write{2147483647,-1}
+const	float	$const12	0.230000004		%read{21,21} %write{2147483647,-1}
 temp	int	$tmp13	%read{22,22} %write{21,21}
 temp	int	$tmp14	%read{23,27} %write{22,26}
 const	float	$const13	0.769999981		%read{24,24} %write{2147483647,-1}
 temp	int	$tmp15	%read{25,25} %write{24,24}
 temp	int	$tmp16	%read{26,26} %write{25,25}
+const	string	$const14	"cell"		%read{30,30} %write{2147483647,-1}
 temp	point	$tmp17	%read{30,30} %write{29,29}
-const	float	$const15	100		%read{29,29} %write{2147483647,-1}
-const	float	$const16	0.0500000007		%read{31,31} %write{2147483647,-1}
-temp	color	$tmp18	%read{32,32} %write{31,31}
-const	float	$const17	1.5		%read{33,33} %write{2147483647,-1}
-temp	float	$tmp19	%read{34,34} %write{33,33}
+const	float	$const16	10		%read{29,29} %write{2147483647,-1}
 code ___main___
 # capColor.osl:10
 #     point Pos = transform("object", P);
@@ -85,32 +82,30 @@ code ___main___
 # capColor.osl:18
 #     if(radial < 0.0)
 	lt		$tmp12 radial $const11 	%line{18} %argrw{"wrr"}
-	if		$tmp12 21 35 	%argrw{"r"}
+	if		$tmp12 21 33 	%argrw{"r"}
 # capColor.osl:21
 #         Cout = straw;
 	assign		Cout straw 	%line{21} %argrw{"wr"}
 # capColor.osl:23
-#     else if(u_coord < 0.25 || u_coord > 0.77)
+#     else if(u_coord < 0.23 || u_coord > 0.77)
 	lt		$tmp13 u_coord $const12 	%line{23} %argrw{"wrr"}
 	neq		$tmp14 $tmp13 $const4 	%argrw{"wrr"}
 	if		$tmp14 24 27 	%argrw{"r"}
 	gt		$tmp15 u_coord $const13 	%argrw{"wrr"}
 	neq		$tmp16 $tmp15 $const4 	%argrw{"wrr"}
 	assign		$tmp14 $tmp16 	%argrw{"wr"}
-	if		$tmp14 29 35 	%argrw{"r"}
+	if		$tmp14 29 33 	%argrw{"r"}
 # capColor.osl:25
 #         Cout = straw;
 	assign		Cout straw 	%line{25} %argrw{"wr"}
 # capColor.osl:29
-#         float helix_n = noise("simplex", P*100);
-	mul		$tmp17 P $const15 	%line{29} %argrw{"wrr"}
-	noise		___347_helix_n $const8 $tmp17 	%argrw{"wrr"}
+#         float helix_n = noise("cell", P*10);
+	mul		$tmp17 P $const16 	%line{29} %argrw{"wrr"}
+	noise		___347_helix_n $const14 $tmp17 	%argrw{"wrr"}
 # capColor.osl:30
-#         color helix_noise = mix(colorful, 0.05, helix_n);
-	assign		$tmp18 $const16 	%line{30} %argrw{"wr"}
-	mix		___347_helix_noise colorful $tmp18 ___347_helix_n 	%argrw{"wrrr"}
+#         color helix_noise = mix(straw, colorful, helix_n);
+	mix		___347_helix_noise straw colorful ___347_helix_n 	%line{30} %argrw{"wrrr"}
 # capColor.osl:31
-#         Cout = mix(helix_noise, straw, chaos * 1.5);
-	mul		$tmp19 chaos $const17 	%line{31} %argrw{"wrr"}
-	mix		Cout ___347_helix_noise straw $tmp19 	%argrw{"wrrr"}
+#         Cout = mix(helix_noise, straw, chaos);
+	mix		Cout ___347_helix_noise straw chaos 	%line{31} %argrw{"wrrr"}
 	end

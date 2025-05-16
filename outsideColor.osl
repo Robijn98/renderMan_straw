@@ -12,7 +12,18 @@ shader strawStripes
     output color Cout = 0,
 )
 {
-    //coloured helix
+    
+    //add noise to base ------------------------------
+    float base_n = noise("simplex", P*80);
+    color base_noise = mix(base, 0.7, base_n);
+    color soft_yellow = color(1.0, 0.95, 0.7);
+    base_noise = mix(base_noise,soft_yellow , base_n);
+
+    
+    //coloured helix --------------------------------------
+    //noise border -----------------------------------
+
+    color helix_offset = helix + 0.02;
     float twists = 1.0;
     float helix_width = 0.23;
 
@@ -30,16 +41,34 @@ shader strawStripes
 
     float linePos = (linePos1 * -1) + linePos2;
 
-    //noise on helix color for texture
+    //noise on helix color for texture --------
+
     float helix_n = noise("simplex", P*100);
-    color helix_noise = mix(helix, 0.05, helix_n);
+    color helix_noise = mix(helix_offset, 0.05, helix_n);
 
-
-    color helix_coloured = mix(base, helix_noise, linePos);
-
+    // noise on helix border for misprint -----
+    
+    color helix_coloured = mix(base_noise, helix_noise, linePos);
 
     
-    //displaced helix
+    
+    //no bordernoise overlay --------------
+    
+    float small_helix = 0.25;
+
+    stripeBoundary1 = abs(s - t) < small_helix;
+    linePos1 = smoothstep(0.05, 0.05, stripeBoundary1);
+
+    stripeBoundary2 = abs(s - t) < (1 - small_helix);
+    linePos2 = smoothstep(0.05, 0.05, stripeBoundary2);
+
+    linePos = (linePos1 * -1) + linePos2;
+    helix_noise = mix(helix, 0.05, helix_n);
+    helix_coloured = mix(helix_coloured, helix_noise, linePos);
+
+  
+    
+    //displaced helix ---------------------------------------
     helix_width = 0.005;
     color offset_helix = color(0.7,0.7,0.7);
 

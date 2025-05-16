@@ -2,10 +2,26 @@ OpenShadingLanguage 1.00
 # Compiled by oslc 1.13.0.@PROJECT_VERSION_TWEAK@"dev"
 # options: 
 shader insideStraw
-param	color	inside	1 1 1		%read{0,0} %write{2147483647,-1}
-oparam	color	Cout	0 0 0		%read{2147483647,-1} %write{0,0}
+param	color	inside	1 1 1		%read{3,3} %write{2147483647,-1}
+oparam	color	Cout	0 0 0		%read{2147483647,-1} %write{4,4}
+global	point	P	%read{0,0} %write{2147483647,-1}
+local	float	base_n	%read{3,3} %write{1,1}
+local	color	base_noise	%read{4,4} %write{3,3}
+const	string	$const1	"simplex"		%read{1,1} %write{2147483647,-1}
+temp	point	$tmp1	%read{1,1} %write{0,0}
+const	float	$const3	80		%read{0,0} %write{2147483647,-1}
+const	float	$const4	0.699999988		%read{2,2} %write{2147483647,-1}
+temp	color	$tmp2	%read{3,3} %write{2,2}
 code ___main___
 # insideColor.osl:8
-#     Cout = inside;
-	assign		Cout inside 	%filename{"insideColor.osl"} %line{8} %argrw{"wr"}
+#     float base_n = noise("simplex", P*80);
+	mul		$tmp1 P $const3 	%filename{"insideColor.osl"} %line{8} %argrw{"wrr"}
+	noise		base_n $const1 $tmp1 	%argrw{"wrr"}
+# insideColor.osl:9
+#     color base_noise = mix(inside, 0.7, base_n);
+	assign		$tmp2 $const4 	%line{9} %argrw{"wr"}
+	mix		base_noise inside $tmp2 base_n 	%argrw{"wrrr"}
+# insideColor.osl:11
+#     Cout = base_noise;
+	assign		Cout base_noise 	%line{11} %argrw{"wr"}
 	end

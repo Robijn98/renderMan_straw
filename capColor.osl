@@ -20,15 +20,16 @@ shader capStraw
         //innerface
         Cout = straw;
     }    
-    else if(u_coord < 0.25 || u_coord > 0.77)
+    else if(u_coord < 0.23 || u_coord > 0.77)
     {
         Cout = straw;
     }
     else
     {
-        float helix_n = noise("simplex", P*100);
-        color helix_noise = mix(colorful, 0.05, helix_n);
-        Cout = mix(helix_noise, straw, chaos * 1.5);
+        float helix_n = noise("cell", P*10);
+        color helix_noise = mix(straw, colorful, helix_n);
+        Cout = mix(helix_noise, straw, chaos);
+        //Cout = colorful;
     }
 
 
