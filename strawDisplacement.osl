@@ -5,6 +5,7 @@ shader strawDisplacement(
     float stripe_area_start = 0.15,
     float stripe_area_rad = 0.01,
     float dent_noise = 0.1,
+    
     output float result = 0.0,
     
 
@@ -44,14 +45,15 @@ shader strawDisplacement(
     point worldPos = transform("world", P);
 
     // Create stripe pattern 
-    float stripes = noise("perlin", point(worldPos[0] * stripeFreq, worldPos[1], worldPos[2] * dent_noise));
+    float stripes = noise("perlin", point(worldPos[0] * dent_noise, worldPos[1], worldPos[2] * stripeFreq));
     float stripeDents = smoothstep(0.4 - stripeWidth, 0.4 + stripeWidth, stripes);
 
     float stripeMask = (v > stripe_area_start && v < stripe_area_start+stripe_area_rad) ? 1.0 : 0.0;
 
     // Apply dent only in region
-    result += mix(result, -0.0001, stripeDents) * stripeMask;
+    result += mix(result, -0.01, stripeDents) * stripeMask;
 
+    
     //dents top straw -------------------------------------------------------
     float edge_softness = 0.002; 
     float dent_start = 0.003; 

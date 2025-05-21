@@ -5,7 +5,7 @@ shader insideStraw
 
 )
 {
-    float base_n = noise("simplex", P*80);
+    float base_n = noise("simplex", P*80) * 0.7;
     color base_noise = mix(inside, 0.7, base_n);
 
     Cout = base_noise;

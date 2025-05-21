@@ -2,20 +2,31 @@ shader capDisplacement
 (
     output float result = 0.0,
     float major_radius = 0.19,
+    float coffee = 1.0,
 )
 {
 
     point Pos = transform("object", P);
     float r = sqrt(Pos[0]*Pos[0] + Pos[1]*Pos[1]);
+    float z = sqrt(Pos[1]*Pos[1] + Pos[2]*Pos[2]);
     float radial = r - major_radius;
+    float radial_z = z - major_radius;
 
     float u_coord = mod(u, 1.0);
 
 
     if(radial < 0.0)
     {
-        float n = noise("perlin", P * 10);
-        result = n * 0.02;
+        if(coffee == 1)
+        {
+            float n = noise("perlin", P * 10);
+            
+            result = n * 0.02;
+        }
+        else
+        {
+            return;
+        }
     }    
     else
     {

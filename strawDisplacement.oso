@@ -7,7 +7,7 @@ param	float	inwardFade	0.00899999961		%read{37,37} %write{2147483647,-1}
 param	float	dent_area_rad	0.0500000007		%read{68,68} %write{2147483647,-1}
 param	float	stripe_area_start	0.150000006		%read{53,56} %write{2147483647,-1}
 param	float	stripe_area_rad	0.00999999978		%read{56,56} %write{2147483647,-1}
-param	float	dent_noise	0.100000001		%read{47,47} %write{2147483647,-1}
+param	float	dent_noise	0.100000001		%read{44,44} %write{2147483647,-1}
 oparam	float	result	0		%read{31,80} %write{31,80}
 global	point	P	%read{42,42} %write{2147483647,-1}
 global	float	u	%read{2,27} %write{2147483647,-1}
@@ -25,7 +25,7 @@ local	float	stagger	%read{30,30} %write{29,29}
 local	float	startFalloff	%read{36,36} %write{32,32}
 local	float	endFalloff	%read{36,36} %write{35,35}
 local	float	endTaper	%read{37,37} %write{36,36}
-local	float	stripeFreq	%read{44,44} %write{39,39}
+local	float	stripeFreq	%read{47,47} %write{39,39}
 local	float	stripeWidth	%read{50,51} %write{40,40}
 local	point	worldPos	%read{43,69} %write{42,42}
 local	float	stripes	%read{52,52} %write{49,49}
@@ -65,7 +65,7 @@ temp	float	$tmp17	%read{29,29} %write{28,28}
 const	string	$const10	"uperlin"		%read{28,28} %write{2147483647,-1}
 temp	float	$tmp18	%read{28,28} %write{27,27}
 const	float	$const12	5		%read{27,27} %write{2147483647,-1}
-const	float	$const13	-0.00999999978		%read{29,29} %write{2147483647,-1}
+const	float	$const13	-0.00999999978		%read{29,63} %write{2147483647,-1}
 temp	float	$tmp19	%read{31,31} %write{30,30}
 const	float	$const14	0		%read{32,62} %write{2147483647,-1}
 temp	float	$tmp20	%read{35,35} %write{34,34}
@@ -93,28 +93,27 @@ temp	float	$tmp33	%read{57,57} %write{56,56}
 temp	int	$tmp34	%read{58,58} %write{57,57}
 temp	int	$tmp35	%read{59,59} %write{58,58}
 temp	float	$tmp36	%read{64,64} %write{63,63}
-const	float	$const23	-9.99999975e-05		%read{63,63} %write{2147483647,-1}
 temp	float	$tmp37	%read{65,65} %write{64,64}
-const	float	$const24	0.00200000009		%read{66,66} %write{2147483647,-1}
-const	float	$const25	0.00300000003		%read{67,67} %write{2147483647,-1}
+const	float	$const23	0.00200000009		%read{66,66} %write{2147483647,-1}
+const	float	$const24	0.00300000003		%read{67,67} %write{2147483647,-1}
 temp	float	$tmp38	%read{72,72} %write{70,70}
 temp	float	$tmp39	%read{72,72} %write{71,71}
 temp	float	$tmp40	%read{75,75} %write{73,73}
 temp	float	$tmp41	%read{75,75} %write{74,74}
 temp	float	$tmp42	%read{77,77} %write{76,76}
 temp	float	$tmp43	%read{79,79} %write{78,78}
-const	float	$const26	0.0189999994		%read{78,78} %write{2147483647,-1}
+const	float	$const25	0.0189999994		%read{78,78} %write{2147483647,-1}
 temp	float	$tmp44	%read{80,80} %write{79,79}
 code ___main___
-# strawDisplacement.osl:14
-#     float twists = 1.0;
-	assign		twists $const1 	%filename{"strawDisplacement.osl"} %line{14} %argrw{"wr"}
 # strawDisplacement.osl:15
+#     float twists = 1.0;
+	assign		twists $const1 	%filename{"strawDisplacement.osl"} %line{15} %argrw{"wr"}
+# strawDisplacement.osl:16
 #     float helix_width = 0.005;
-	assign		helix_width $const2 	%line{15} %argrw{"wr"}
-# strawDisplacement.osl:17
+	assign		helix_width $const2 	%line{16} %argrw{"wr"}
+# strawDisplacement.osl:18
 #     float s = mod((u) * -1, 1);
-	mul		$tmp1 u $const4 	%line{17} %argrw{"wrr"}
+	mul		$tmp1 u $const4 	%line{18} %argrw{"wrr"}
 	functioncall	$const6 8 	%argrw{"r"}
 # /opt/pixar/RenderManProServer-26.2/lib/osl/include/stdosl.h:132
 # float  mod (float  a, float  b) { return a - b*floor(a/b); }
@@ -122,9 +121,9 @@ code ___main___
 	floor		$tmp2 $tmp3 	%argrw{"wr"}
 	mul		$tmp4 $const1 $tmp2 	%argrw{"wrr"}
 	sub		s $tmp1 $tmp4 	%argrw{"wrr"}
-# strawDisplacement.osl:18
+# strawDisplacement.osl:19
 #     float t = mod((v) * 8, 1);
-	mul		$tmp5 v $const8 	%filename{"strawDisplacement.osl"} %line{18} %argrw{"wrr"}
+	mul		$tmp5 v $const8 	%filename{"strawDisplacement.osl"} %line{19} %argrw{"wrr"}
 	functioncall	$const6 14 	%argrw{"r"}
 # /opt/pixar/RenderManProServer-26.2/lib/osl/include/stdosl.h:132
 # float  mod (float  a, float  b) { return a - b*floor(a/b); }
@@ -132,82 +131,82 @@ code ___main___
 	floor		$tmp6 $tmp7 	%argrw{"wr"}
 	mul		$tmp8 $const1 $tmp6 	%argrw{"wrr"}
 	sub		t $tmp5 $tmp8 	%argrw{"wrr"}
-# strawDisplacement.osl:20
+# strawDisplacement.osl:21
 #     float stripeBoundary1 = abs(s - t) < helix_width;
-	sub		$tmp10 s t 	%filename{"strawDisplacement.osl"} %line{20} %argrw{"wrr"}
+	sub		$tmp10 s t 	%filename{"strawDisplacement.osl"} %line{21} %argrw{"wrr"}
 	abs		$tmp9 $tmp10 	%argrw{"wr"}
 	lt		$tmp11 $tmp9 helix_width 	%argrw{"wrr"}
 	assign		stripeBoundary1 $tmp11 	%argrw{"wr"}
-# strawDisplacement.osl:21
+# strawDisplacement.osl:22
 #     float linePos1 = smoothstep(0.05, 0.05, stripeBoundary1);
-	smoothstep	linePos1 $const9 $const9 stripeBoundary1 	%line{21} %argrw{"wrrr"}
-# strawDisplacement.osl:23
+	smoothstep	linePos1 $const9 $const9 stripeBoundary1 	%line{22} %argrw{"wrrr"}
+# strawDisplacement.osl:24
 #     float stripeBoundary2 = abs(s - t) < (1 - helix_width);
-	sub		$tmp13 s t 	%line{23} %argrw{"wrr"}
+	sub		$tmp13 s t 	%line{24} %argrw{"wrr"}
 	abs		$tmp12 $tmp13 	%argrw{"wr"}
 	sub		$tmp14 $const1 helix_width 	%argrw{"wrr"}
 	lt		$tmp15 $tmp12 $tmp14 	%argrw{"wrr"}
 	assign		stripeBoundary2 $tmp15 	%argrw{"wr"}
-# strawDisplacement.osl:24
+# strawDisplacement.osl:25
 #     float linePos2 = smoothstep(0.05, 0.05, stripeBoundary2);
-	smoothstep	linePos2 $const9 $const9 stripeBoundary2 	%line{24} %argrw{"wrrr"}
-# strawDisplacement.osl:26
-#     float linePos = (linePos1 * -1) + linePos2;
-	mul		$tmp16 linePos1 $const4 	%line{26} %argrw{"wrr"}
-	add		linePos $tmp16 linePos2 	%argrw{"wrr"}
+	smoothstep	linePos2 $const9 $const9 stripeBoundary2 	%line{25} %argrw{"wrrr"}
 # strawDisplacement.osl:27
+#     float linePos = (linePos1 * -1) + linePos2;
+	mul		$tmp16 linePos1 $const4 	%line{27} %argrw{"wrr"}
+	add		linePos $tmp16 linePos2 	%argrw{"wrr"}
+# strawDisplacement.osl:28
 #     float stagger = noise("uperlin", u * 5) * -0.01; 
-	mul		$tmp18 u $const12 	%line{27} %argrw{"wrr"}
+	mul		$tmp18 u $const12 	%line{28} %argrw{"wrr"}
 	noise		$tmp17 $const10 $tmp18 	%argrw{"wrr"}
 	mul		stagger $tmp17 $const13 	%argrw{"wrr"}
-# strawDisplacement.osl:29
+# strawDisplacement.osl:30
 #     result += linePos * stagger;
-	mul		$tmp19 linePos stagger 	%line{29} %argrw{"wrr"}
+	mul		$tmp19 linePos stagger 	%line{30} %argrw{"wrr"}
 	add		result result $tmp19 	%argrw{"wrr"}
-# strawDisplacement.osl:32
-#     float startFalloff = smoothstep(0.0, taperWidth, v);
-	smoothstep	startFalloff $const14 taperWidth v 	%line{32} %argrw{"wrrr"}
 # strawDisplacement.osl:33
+#     float startFalloff = smoothstep(0.0, taperWidth, v);
+	smoothstep	startFalloff $const14 taperWidth v 	%line{33} %argrw{"wrrr"}
+# strawDisplacement.osl:34
 #     float endFalloff = (smoothstep(1.0, 1.0-taperWidth, v)) * -1;
-	sub		$tmp21 $const1 taperWidth 	%line{33} %argrw{"wrr"}
+	sub		$tmp21 $const1 taperWidth 	%line{34} %argrw{"wrr"}
 	smoothstep	$tmp20 $const1 $tmp21 v 	%argrw{"wrrr"}
 	mul		endFalloff $tmp20 $const4 	%argrw{"wrr"}
-# strawDisplacement.osl:34
+# strawDisplacement.osl:35
 #     float endTaper = startFalloff + endFalloff;
-	add		endTaper startFalloff endFalloff 	%line{34} %argrw{"wrr"}
-# strawDisplacement.osl:36
+	add		endTaper startFalloff endFalloff 	%line{35} %argrw{"wrr"}
+# strawDisplacement.osl:37
 #     result -= endTaper * inwardFade;
-	mul		$tmp22 endTaper inwardFade 	%line{36} %argrw{"wrr"}
+	mul		$tmp22 endTaper inwardFade 	%line{37} %argrw{"wrr"}
 	sub		result result $tmp22 	%argrw{"wrr"}
-# strawDisplacement.osl:40
-#     float stripeFreq = 10.0;  
-	assign		stripeFreq $const15 	%line{40} %argrw{"wr"}
 # strawDisplacement.osl:41
+#     float stripeFreq = 10.0;  
+	assign		stripeFreq $const15 	%line{41} %argrw{"wr"}
+# strawDisplacement.osl:42
 #     float stripeWidth = 0.05; 
-	assign		stripeWidth $const9 	%line{41} %argrw{"wr"}
-# strawDisplacement.osl:44
+	assign		stripeWidth $const9 	%line{42} %argrw{"wr"}
+# strawDisplacement.osl:45
 #     point worldPos = transform("world", P);
-	functioncall	$const17 43 	%line{44} %argrw{"r"}
+	functioncall	$const17 43 	%line{45} %argrw{"r"}
 # /opt/pixar/RenderManProServer-26.2/lib/osl/include/stdosl.h:263
 # point  transform (string to, point p)  { return transform("common",to,p); }
 	transform	worldPos $const18 $const16 P 	%filename{"/opt/pixar/RenderManProServer-26.2/lib/osl/include/stdosl.h"} %line{263} %argrw{"wrrr"}
-# strawDisplacement.osl:47
-#     float stripes = noise("perlin", point(worldPos[0] * stripeFreq, worldPos[1], worldPos[2] * dent_noise));
-	compref		$tmp24 worldPos $const20 	%filename{"strawDisplacement.osl"} %line{47} %argrw{"wrr"}
-	mul		$tmp25 $tmp24 stripeFreq 	%argrw{"wrr"}
+# strawDisplacement.osl:48
+#     float stripes = noise("perlin", point(worldPos[0] * dent_noise, worldPos[1], worldPos[2] * stripeFreq));
+	compref		$tmp24 worldPos $const20 	%filename{"strawDisplacement.osl"} %line{48} %argrw{"wrr"}
+	mul		$tmp25 $tmp24 dent_noise 	%argrw{"wrr"}
 	compref		$tmp26 worldPos $const5 	%argrw{"wrr"}
 	compref		$tmp27 worldPos $const21 	%argrw{"wrr"}
-	mul		$tmp28 $tmp27 dent_noise 	%argrw{"wrr"}
+	mul		$tmp28 $tmp27 stripeFreq 	%argrw{"wrr"}
 	point		$tmp23 $tmp25 $tmp26 $tmp28 	%argrw{"wrrr"}
 	noise		stripes $const19 $tmp23 	%argrw{"wrr"}
-# strawDisplacement.osl:48
+# strawDisplacement.osl:49
 #     float stripeDents = smoothstep(0.4 - stripeWidth, 0.4 + stripeWidth, stripes);
-	sub		$tmp29 $const22 stripeWidth 	%line{48} %argrw{"wrr"}
+	sub		$tmp29 $const22 stripeWidth 	%line{49} %argrw{"wrr"}
 	add		$tmp30 $const22 stripeWidth 	%argrw{"wrr"}
 	smoothstep	stripeDents $tmp29 $tmp30 stripes 	%argrw{"wrrr"}
-# strawDisplacement.osl:50
+# strawDisplacement.osl:51
 #     float stripeMask = (v > stripe_area_start && v < stripe_area_start+stripe_area_rad) ? 1.0 : 0.0;
-	gt		$tmp31 v stripe_area_start 	%line{50} %argrw{"wrr"}
+	gt		$tmp31 v stripe_area_start 	%line{51} %argrw{"wrr"}
 	neq		$tmp32 $tmp31 $const20 	%argrw{"wrr"}
 	if		$tmp32 60 60 	%argrw{"r"}
 	add		$tmp33 stripe_area_start stripe_area_rad 	%argrw{"wrr"}
@@ -217,40 +216,40 @@ code ___main___
 	if		$tmp32 62 63 	%argrw{"r"}
 	assign		stripeMask $const1 	%argrw{"wr"}
 	assign		stripeMask $const14 	%argrw{"wr"}
-# strawDisplacement.osl:53
-#     result += mix(result, -0.0001, stripeDents) * stripeMask;
-	mix		$tmp36 result $const23 stripeDents 	%line{53} %argrw{"wrrr"}
+# strawDisplacement.osl:54
+#     result += mix(result, -0.01, stripeDents) * stripeMask;
+	mix		$tmp36 result $const13 stripeDents 	%line{54} %argrw{"wrrr"}
 	mul		$tmp37 $tmp36 stripeMask 	%argrw{"wrr"}
 	add		result result $tmp37 	%argrw{"wrr"}
-# strawDisplacement.osl:56
-#     float edge_softness = 0.002; 
-	assign		edge_softness $const24 	%line{56} %argrw{"wr"}
-# strawDisplacement.osl:57
-#     float dent_start = 0.003; 
-	assign		dent_start $const25 	%line{57} %argrw{"wr"}
 # strawDisplacement.osl:58
-#     float dent_end = dent_start + dent_area_rad;
-	add		dent_end dent_start dent_area_rad 	%line{58} %argrw{"wrr"}
+#     float edge_softness = 0.002; 
+	assign		edge_softness $const23 	%line{58} %argrw{"wr"}
+# strawDisplacement.osl:59
+#     float dent_start = 0.003; 
+	assign		dent_start $const24 	%line{59} %argrw{"wr"}
 # strawDisplacement.osl:60
-#     float drink_dents = noise("perlin", worldPos);
-	noise		drink_dents $const19 worldPos 	%line{60} %argrw{"wrr"}
+#     float dent_end = dent_start + dent_area_rad;
+	add		dent_end dent_start dent_area_rad 	%line{60} %argrw{"wrr"}
 # strawDisplacement.osl:62
+#     float drink_dents = noise("perlin", worldPos);
+	noise		drink_dents $const19 worldPos 	%line{62} %argrw{"wrr"}
+# strawDisplacement.osl:64
 #     float fadeIn  = smoothstep(dent_start - edge_softness, dent_start + edge_softness, v);
-	sub		$tmp38 dent_start edge_softness 	%line{62} %argrw{"wrr"}
+	sub		$tmp38 dent_start edge_softness 	%line{64} %argrw{"wrr"}
 	add		$tmp39 dent_start edge_softness 	%argrw{"wrr"}
 	smoothstep	fadeIn $tmp38 $tmp39 v 	%argrw{"wrrr"}
-# strawDisplacement.osl:63
+# strawDisplacement.osl:65
 #     float fadeOut = smoothstep(dent_end - edge_softness, dent_end + edge_softness, v);
-	sub		$tmp40 dent_end edge_softness 	%line{63} %argrw{"wrr"}
+	sub		$tmp40 dent_end edge_softness 	%line{65} %argrw{"wrr"}
 	add		$tmp41 dent_end edge_softness 	%argrw{"wrr"}
 	smoothstep	fadeOut $tmp40 $tmp41 v 	%argrw{"wrrr"}
-# strawDisplacement.osl:65
-#     float dentMask = fadeIn * (1.0 - fadeOut);
-	sub		$tmp42 $const1 fadeOut 	%line{65} %argrw{"wrr"}
-	mul		dentMask fadeIn $tmp42 	%argrw{"wrr"}
 # strawDisplacement.osl:67
+#     float dentMask = fadeIn * (1.0 - fadeOut);
+	sub		$tmp42 $const1 fadeOut 	%line{67} %argrw{"wrr"}
+	mul		dentMask fadeIn $tmp42 	%argrw{"wrr"}
+# strawDisplacement.osl:69
 #     result += mix(result, 0.019, drink_dents) * dentMask;
-	mix		$tmp43 result $const26 drink_dents 	%line{67} %argrw{"wrrr"}
+	mix		$tmp43 result $const25 drink_dents 	%line{69} %argrw{"wrrr"}
 	mul		$tmp44 $tmp43 dentMask 	%argrw{"wrr"}
 	add		result result $tmp44 	%argrw{"wrr"}
 	end

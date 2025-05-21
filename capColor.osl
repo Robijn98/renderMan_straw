@@ -28,8 +28,12 @@ shader capStraw
     {
         float helix_n = noise("cell", P*10);
         color helix_noise = mix(straw, colorful, helix_n);
-        Cout = mix(helix_noise, straw, chaos);
-        //Cout = colorful;
+        //noise base
+        float base_n = noise("simplex", P*80) * 0.5;
+        color base_noise = mix(straw, 0.7, base_n);
+
+        Cout = mix(helix_noise, base_noise, chaos);
+        
     }
 
 

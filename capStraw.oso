@@ -3,18 +3,20 @@ OpenShadingLanguage 1.00
 # options: 
 shader capStraw
 param	color	colorful	1 0 0		%read{31,31} %write{2147483647,-1}
-param	color	straw	1 1 1		%read{20,32} %write{2147483647,-1}
-oparam	color	Cout	0 0 0		%read{2147483647,-1} %write{20,32}
+param	color	straw	1 1 1		%read{20,36} %write{2147483647,-1}
+oparam	color	Cout	0 0 0		%read{2147483647,-1} %write{20,37}
 param	float	major_radius	0.189999998		%read{10,10} %write{2147483647,-1}
-global	point	P	%read{1,29} %write{2147483647,-1}
+global	point	P	%read{1,32} %write{2147483647,-1}
 global	float	u	%read{12,15} %write{2147483647,-1}
 local	point	Pos	%read{2,6} %write{1,1}
 local	float	r	%read{10,10} %write{9,9}
 local	float	radial	%read{18,18} %write{10,10}
 local	float	u_coord	%read{21,24} %write{15,15}
-local	float	chaos	%read{32,32} %write{17,17}
+local	float	chaos	%read{37,37} %write{17,17}
 local	float	___347_helix_n	%read{31,31} %write{30,30}
-local	color	___347_helix_noise	%read{32,32} %write{31,31}
+local	color	___347_helix_noise	%read{37,37} %write{31,31}
+local	float	___347_base_n	%read{36,36} %write{34,34}
+local	color	___347_base_noise	%read{37,37} %write{36,36}
 const	string	$const1	"object"		%read{1,1} %write{2147483647,-1}
 const	string	$const2	"transform"		%read{0,0} %write{2147483647,-1}
 const	string	$const3	"common"		%read{1,1} %write{2147483647,-1}
@@ -32,7 +34,7 @@ const	string	$const7	"mod"		%read{11,11} %write{2147483647,-1}
 temp	float	$tmp8	%read{14,14} %write{13,13}
 temp	float	$tmp9	%read{13,13} %write{12,12}
 temp	float	$tmp10	%read{15,15} %write{14,14}
-const	string	$const8	"simplex"		%read{17,17} %write{2147483647,-1}
+const	string	$const8	"simplex"		%read{17,33} %write{2147483647,-1}
 temp	point	$tmp11	%read{17,17} %write{16,16}
 const	float	$const10	20		%read{16,16} %write{2147483647,-1}
 const	float	$const11	0		%read{18,18} %write{2147483647,-1}
@@ -46,6 +48,12 @@ temp	int	$tmp16	%read{26,26} %write{25,25}
 const	string	$const14	"cell"		%read{30,30} %write{2147483647,-1}
 temp	point	$tmp17	%read{30,30} %write{29,29}
 const	float	$const16	10		%read{29,29} %write{2147483647,-1}
+temp	float	$tmp18	%read{34,34} %write{33,33}
+temp	point	$tmp19	%read{33,33} %write{32,32}
+const	float	$const18	80		%read{32,32} %write{2147483647,-1}
+const	float	$const19	0.5		%read{34,34} %write{2147483647,-1}
+const	float	$const20	0.699999988		%read{35,35} %write{2147483647,-1}
+temp	color	$tmp20	%read{36,36} %write{35,35}
 code ___main___
 # capColor.osl:10
 #     point Pos = transform("object", P);
@@ -82,7 +90,7 @@ code ___main___
 # capColor.osl:18
 #     if(radial < 0.0)
 	lt		$tmp12 radial $const11 	%line{18} %argrw{"wrr"}
-	if		$tmp12 21 33 	%argrw{"r"}
+	if		$tmp12 21 38 	%argrw{"r"}
 # capColor.osl:21
 #         Cout = straw;
 	assign		Cout straw 	%line{21} %argrw{"wr"}
@@ -94,7 +102,7 @@ code ___main___
 	gt		$tmp15 u_coord $const13 	%argrw{"wrr"}
 	neq		$tmp16 $tmp15 $const4 	%argrw{"wrr"}
 	assign		$tmp14 $tmp16 	%argrw{"wr"}
-	if		$tmp14 29 33 	%argrw{"r"}
+	if		$tmp14 29 38 	%argrw{"r"}
 # capColor.osl:25
 #         Cout = straw;
 	assign		Cout straw 	%line{25} %argrw{"wr"}
@@ -105,7 +113,16 @@ code ___main___
 # capColor.osl:30
 #         color helix_noise = mix(straw, colorful, helix_n);
 	mix		___347_helix_noise straw colorful ___347_helix_n 	%line{30} %argrw{"wrrr"}
-# capColor.osl:31
-#         Cout = mix(helix_noise, straw, chaos);
-	mix		Cout ___347_helix_noise straw chaos 	%line{31} %argrw{"wrrr"}
+# capColor.osl:32
+#         float base_n = noise("simplex", P*80) * 0.5;
+	mul		$tmp19 P $const18 	%line{32} %argrw{"wrr"}
+	noise		$tmp18 $const8 $tmp19 	%argrw{"wrr"}
+	mul		___347_base_n $tmp18 $const19 	%argrw{"wrr"}
+# capColor.osl:33
+#         color base_noise = mix(straw, 0.7, base_n);
+	assign		$tmp20 $const20 	%line{33} %argrw{"wr"}
+	mix		___347_base_noise straw $tmp20 ___347_base_n 	%argrw{"wrrr"}
+# capColor.osl:35
+#         Cout = mix(helix_noise, base_noise, chaos);
+	mix		Cout ___347_helix_noise ___347_base_noise chaos 	%line{35} %argrw{"wrrr"}
 	end

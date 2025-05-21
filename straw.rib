@@ -1,16 +1,17 @@
 Display "straw.exr" "file" "rgb"
 
-Format 4096 2096 1.0
-#Format 1024 512 1.0
+#Format 2048 2160 1.0
+Format 4096 2160 1.0
 
 Projection "perspective" "uniform float fov" [45]
 Option "searchpath" "shader" ["./"]
 Option "searchpath" "texture" ["./textures"]
 
-Hider "raytrace" "int incremental" [1] "int maxsamples" [200]
+Hider "raytrace" "int incremental" [1] "int maxsamples" [1001]
 
 Integrator "PxrPathTracer" "integrator"
 PixelVariance 0.001
+PixelFilter "gaussian" 2 2
 
 
 
@@ -26,7 +27,7 @@ WorldBegin
     AttributeEnd    
     # Top-level transform
     TransformBegin
-        Translate 3 3 30
+        Translate 3 5 20
         Rotate 50 1 0 0
     
         # Straw red
@@ -52,6 +53,7 @@ WorldBegin
                     Pattern "strawDisplacement" "strawDisplacementPattern" 
                         "float taperWidth" [0.001]
                         "float inwardFade" [-0.01]
+                        "float stripe_area_rad" [0.0]
 
                     Displace "PxrDisplace" "strawDisp" 
                         "reference float dispScalar" ["strawDisplacementPattern:result"]
@@ -60,11 +62,12 @@ WorldBegin
                         "color base" [1 1 0.9] 
                         "color helix" [0.7 0 0]
                         "int coffeeBool" [0]
-                        "color coffee" [0.7686 0.5725 0.2431]
-                        "float stain_multiplyer" [0.25]
+
+
 
                     Bxdf "PxrDiffuse" "diffuseShader" 
                         "reference color diffuseColor" ["straw:Cout"]
+                        
 
                     Cylinder 0.2 0 20 360
                 AttributeEnd
@@ -106,11 +109,13 @@ WorldBegin
 
                     Pattern "capDisplacement" "capDisplacementPattern"
                         "float major_radius" [0.18]
+                        "float coffee" [0.0]
 
                     Displace "PxrDisplace" "capDisp" 
                         "reference float dispScalar" ["capDisplacementPattern:result"]
 
-                    Translate 0 0 0.00
+                    Translate 0 0 0
+                    
                     Scale 1 1 0.1
                     Torus 0.18 0.015 0 360 360
                 AttributeEnd
@@ -137,7 +142,7 @@ WorldBegin
             TransformBegin
                 
                 #proper transformation
-                Translate -7 -13.2 -0.5
+                Translate -7 -13.05 -0.5
                 Rotate -48.5 1 0 0
                 Rotate 10 0 1 0 
                 Rotate 10 0 0 1
@@ -151,6 +156,8 @@ WorldBegin
                     Pattern "strawDisplacement" "strawDisplacementPattern" 
                         "float taperWidth" [0.001]
                         "float inwardFade" [-0.01]
+                        "float stripe_area_start" [0.15]
+                        "float stripe_area_rad" [0.07]
 
                     Displace "PxrDisplace" "strawDisp" 
                         "reference float dispScalar" ["strawDisplacementPattern:result"]
@@ -160,7 +167,8 @@ WorldBegin
                         "color helix" [0 0.7 0]
                         "int coffeeBool" [1]
                         "color coffee" [0.6 0.45 0.18]
-                        "float stain_multiplyer" [0.30]
+                        "float stain_area_start" [0.03]
+                        "float stain_multiplyer" [0.50]
 
                     Bxdf "PxrDiffuse" "diffuseShader" 
                         "reference color diffuseColor" ["straw:Cout"]
@@ -196,7 +204,7 @@ WorldBegin
                     Attribute "displacementbound" "sphere" [0.5]
 
                     Pattern "capStraw" "cap" 
-                        "color straw" [0.6 0.45 0.18]
+                        "color straw" [0.8 0.65 0.38]
                         "color colorful" [0 0.7 0]
                         "float major_radius" [0.18]
 

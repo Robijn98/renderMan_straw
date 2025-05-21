@@ -1,3 +1,33 @@
+//https://github.com/Maxon-Computer/Redshift-OSL-Shaders/blob/main/Dots.osl
+
+float dotPattern(point pos, float scale, float radius)
+{
+    point p = pos / scale;
+    float pri = -1.0;
+    float result = 0.0;
+
+    // Loop 3x3 grid around point
+    for (float x = -1; x <= 1; x++)
+    {
+        for (float y = -1; y <= 1; y++)
+        {
+            point cell = floor(p) + vector(x, y, 0.0) + 0.001;
+            point center = cell + noise("cell", cell, 1);
+            float dist = distance(center, p);
+            float priority = noise("cell", cell, 2);
+
+            if (dist < radius && priority > pri)
+            {
+                pri = priority;
+                result = 1.0; // Inside dot
+            }
+        }
+    }
+    return result;
+}
+
+
+
 shader strawStripes
 (
     color base = color(0,0,0),
@@ -17,16 +47,16 @@ shader strawStripes
 {
     
     //add noise to base ------------------------------
-    float base_n = noise("simplex", P*80);
-    color base_noise = mix(base, 0.7, base_n);
+    float base_n = noise("simplex", P*80)*0.5;
+    color base_noise = mix(base, 0.8, base_n);
     color soft_yellow = color(1.0, 0.95, 0.7);
     base_noise = mix(base_noise,soft_yellow , base_n);
 
     
     //coloured helix --------------------------------------
-    //noise border -----------------------------------
+    //noise border --------------------------
 
-    color helix_offset = helix + 0.02;
+    color helix_offset = helix + 0.08;
     float twists = 1.0;
     float helix_width = 0.23;
 
@@ -46,7 +76,7 @@ shader strawStripes
 
     //noise on helix color for texture --------
 
-    float helix_n = noise("simplex", P*100);
+    float helix_n = noise("simplex", P*100) * 0.4;
     color helix_noise = mix(helix_offset, 0.05, helix_n);
 
     // noise on helix border for misprint -----
@@ -102,7 +132,7 @@ shader strawStripes
     // --- coffee stains -------------------------------------------------
     if(coffeeBool == 1)
     {
-        float stainWidth = 0.03;                 
+        float stainWidth = 0.02;                 
         float edge_noise_scale = 3.0;             
         float color_noise_scale = 1.2;          
         float color_variation_amount = 0.1;  
@@ -114,22 +144,66 @@ shader strawStripes
         // Edge breakup noise
         float edgeBreakup = noise("perlin", worldPos * edge_noise_scale);
 
-        float stainDents = smoothstep(0.4 - stainWidth, 0.4 + stainWidth, stains * 2 + edgeBreakup * 0.2);
+        float rawStain = stains * 2 + edgeBreakup * 0.2;
+        float stainDents = smoothstep(0.4 - stainWidth, 0.4 + stainWidth, rawStain);
 
         float stainMask = (v > stain_area_start && v < stain_area_start + stain_area_rad) ? 1.0 : 0.0;
 
-        //color variation
-        float colorShift = noise("simplex", worldPos * color_noise_scale);
-        color varied_coffee = coffee + color_variation_amount * (colorShift - 0.5);
+        // color variation
+        color coffeeLight = coffee + 0.2;
+        float stainShift = noise("simplex", worldPos * color_noise_scale);
+        color varied_coffee = coffeeLight + color_variation_amount * (stainShift - 0.5);
 
         float stain_strength = stainDents * stainMask;
-        color stain = mix(color(1.0), varied_coffee, stain_strength);
 
-        // Darken base color with stain
+        //Create darker edge
+        float edgeFade = smoothstep(0.4 + stainWidth, 0.4 + stainWidth * 2.0, rawStain);
+        float edgeDarken = mix(0.8, 1.0, edgeFade); 
+
+        color stain = mix(color(1.0), varied_coffee, stain_strength) * edgeDarken;
+
+        // Apply stain to output
         Cout *= stain;
+    
+        //darken color up to stains -------------------------------------------------
+        
+        stainMask = (v > stain_area_start + stain_area_rad) ? 1.0 : 0.0;
+        
+        float stainMask_top = (v > 0.0 && v < 0.03) ? 1.0 : 0.0;
+        
+        stainMask += stainMask_top;
+        float colorShift = noise("simplex", worldPos * color_noise_scale);
+        
+        varied_coffee = coffee + color_variation_amount * (colorShift - 0.5);
+
+        
+        varied_coffee = varied_coffee + 0.6;
+        stain = mix(color(1.0), varied_coffee, stainMask);
+        Cout *= stain;
+        
+        //coffee splat / dots -----------------------------------------------------------
+        float stain_growth = 1.2; 
+        float expanded_rawStain = rawStain * stain_growth;
+        float stainMaskingArea = smoothstep(0.4 - stainWidth, 0.4 + stainWidth, expanded_rawStain);
+        
+        //scale, readius        
+        float dotMask = dotPattern(worldPos, 0.06, 0.2);
+
+        float finalDotMask = dotMask * stainMaskingArea;
+
+        color dotStains = mix(Cout, varied_coffee-0.65, finalDotMask);
+        Cout = mix(Cout, Cout*dotStains, finalDotMask);
+        
+        //Cout *= mix(Cout, color(1,0,0), stainMaskingArea); 
+
+
+
     }
 
 
 
 
 }
+
+
+
