@@ -187,11 +187,11 @@ shader strawStripes
         float stainMaskingArea = smoothstep(0.4 - stainWidth, 0.4 + stainWidth, expanded_rawStain);
         
         //scale, readius        
-        float dotMask = dotPattern(worldPos, 0.06, 0.2);
+        float dotMask = dotPattern(worldPos, 0.15, 0.12);
 
         float finalDotMask = dotMask * stainMaskingArea;
 
-        color dotStains = mix(Cout, varied_coffee-0.65, finalDotMask);
+        color dotStains = mix(Cout, varied_coffee-0.6, finalDotMask);
         Cout = mix(Cout, Cout*dotStains, finalDotMask);
         
         //Cout *= mix(Cout, color(1,0,0), stainMaskingArea); 
@@ -199,9 +199,6 @@ shader strawStripes
 
 
     }
-
-
-
 
 }
 

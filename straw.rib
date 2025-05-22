@@ -1,17 +1,16 @@
 Display "straw.exr" "file" "rgb"
 
-#Format 2048 2160 1.0
-Format 4096 2160 1.0
+#Format 4096 2160 1.0
+Format 1920 1080 1.0
+#Format 2560 1440 1.0
 
 Projection "perspective" "uniform float fov" [45]
 Option "searchpath" "shader" ["./"]
 Option "searchpath" "texture" ["./textures"]
 
-Hider "raytrace" "int incremental" [1] "int maxsamples" [1001]
+Hider "raytrace" "int incremental" [1] "int maxsamples" [10]
 
 Integrator "PxrPathTracer" "integrator"
-PixelVariance 0.001
-PixelFilter "gaussian" 2 2
 
 
 
@@ -27,9 +26,28 @@ WorldBegin
     AttributeEnd    
     # Top-level transform
     TransformBegin
-        Translate 3 5 20
-        Rotate 50 1 0 0
+        Translate 5 6 20
+        Rotate 52 1 0 0
     
+        # coffee cup
+
+        AttributeBegin
+            TransformBegin
+                
+                #plastic 
+
+            Bxdf "PxrSurface" "glassMaterial"
+                "float diffuseGain" [0.0]
+                "float refractionGain" [1.0]
+                "color diffuseColor" [1 1 1]
+
+                Scale 0.5 0.5 0.5
+                ReadArchive "coffee.rib"
+
+            TransformEnd
+        AttributeEnd
+
+
         # Straw red
         AttributeBegin
             TransformBegin
@@ -40,7 +58,7 @@ WorldBegin
                 # Scale 4 4 4
                 
                 #proper transformation
-                Translate -9 -13.2 0
+                Translate -9 -13.25 0
                 Rotate -50 1 0 0
                 Rotate 40 0 1 0 
                 Scale 1 1 1 
