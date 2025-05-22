@@ -19,49 +19,65 @@ WorldBegin
     #lights
     AttributeBegin
         Rotate -90 1 0 0
+        Rotate 30 0 0 1
 
         Light "PxrDomeLight" "domeLight" "string lightColorMap" ["./textures/photo_studio_01_4k.tx"]
+            "float exposure" [-1.5]
 
 
+        
     AttributeEnd    
     # Top-level transform
     TransformBegin
-        Translate 5 6 20
-        Rotate 52 1 0 0
+        Translate 5 2 25
+        
+        Rotate 90 1 0 0
+
+        
     
-        # coffee cup
+        
+        
+    ReadArchive "coffee.rib"
 
-        AttributeBegin
-            TransformBegin
-                
-                #plastic 
+    AttributeBegin
+        TransformBegin
+            Translate -1 -2 8
+            Rotate -90 1 0 0
+            Scale 15 15 15
 
-            Bxdf "PxrSurface" "glassMaterial"
-                "float diffuseGain" [0.0]
-                "float refractionGain" [1.0]
-                "color diffuseColor" [1 1 1]
+    # Bxdf "PxrSurface" "plasticShader"
+    #         "float diffuseGain" [0.0]           
+    #         "color diffuseColor" [0 0 0]           
+    #         "color specularFaceColor" [1.0 1.0 1.0]
+    #         "color specularEdgeColor" [0 0 0]
+    #         "float specularRoughness" [0.01]    
+    #         "float refractionGain" [1.0]          
+    #         "color refractionColor" [1.0 1.0 1.0]
+    #         "color specularIor" [1.5 1.5 1.5]
+    #         "float presence" [1.0]
 
-                Scale 0.5 0.5 0.5
-                ReadArchive "coffee.rib"
+    Bxdf "PxrSurface" "myGlassShader"
+    "color diffuseColor" [0 0 0]
+    "float diffuseGain" [0.0]
+    "float refractionGain" [1.0]
+    "color refractionColor" [1 1 1]
+    "color specularFaceColor" [1 1 1]
+    "float specularRoughness" [0.1]    
 
-            TransformEnd
-        AttributeEnd
+
+            ObjectInstance "coffeeCup"
+
+        TransformEnd
+    AttributeEnd
+
 
 
         # Straw red
         AttributeBegin
             TransformBegin
                 
-                # edit mode
-                # Rotate -90 1 0 0
-                # Rotate 60 0 1 0
-                # Scale 4 4 4
-                
                 #proper transformation
-                Translate -9 -13.25 0
-                Rotate -50 1 0 0
-                Rotate 40 0 1 0 
-                Scale 1 1 1 
+                Translate -1 -2 -6
                 
                 # Outer cylinder
                 AttributeBegin
@@ -160,11 +176,8 @@ WorldBegin
             TransformBegin
                 
                 #proper transformation
-                Translate -7 -13.05 -0.5
-                Rotate -48.5 1 0 0
-                Rotate 10 0 1 0 
-                Rotate 10 0 0 1
-                Scale 1 1 1 
+                Translate -0.8 -2.4 -6
+                Rotate -8 0 1 0
                 
                 # Outer cylinder
                 AttributeBegin
@@ -256,13 +269,111 @@ WorldBegin
             TransformEnd
         AttributeEnd
 
+       # Straw blue
+        AttributeBegin
+            TransformBegin
+                
+                #proper transformation
+                Translate -0.4 -1.6 -6
+                Rotate -6 0 1 0
+                
+                # Outer cylinder
+                AttributeBegin
+                    Attribute "dice" "float micropolygonlength" [0.5]
+                    Attribute "displacementbound" "sphere" [0.5]
+
+                    Pattern "strawDisplacement" "strawDisplacementPattern" 
+                        "float taperWidth" [0.001]
+                        "float inwardFade" [-0.01]
+                        "float stripe_area_start" [0.15]
+                        "float stripe_area_rad" [0.07]
+
+                    Displace "PxrDisplace" "strawDisp" 
+                        "reference float dispScalar" ["strawDisplacementPattern:result"]
+
+                    Pattern "strawStripes" "straw" 
+                        "color base" [1 1 0.9] 
+                        "color helix" [0.0 0 0.7]
+                        "int coffeeBool" [0]
+                        "color coffee" [0.6 0.45 0.18]
+                        "float stain_area_start" [0.03]
+                        "float stain_multiplyer" [0.50]
+
+                    Bxdf "PxrDiffuse" "diffuseShader" 
+                        "reference color diffuseColor" ["straw:Cout"]
+
+                    Cylinder 0.2 0 20 360
+                AttributeEnd
+
+                # Inner cylinder
+                AttributeBegin
+                    Rotate 50 0 0 1
+                    Attribute "dice" "float micropolygonlength" [0.5]
+                    Attribute "displacementbound" "sphere" [0.5]
+
+                    Pattern "insideDisplacement" "insideDisplacementPattern"
+
+                    Displace "PxrDisplace" "insideDisp"
+                        "reference float dispScalar" ["insideDisplacementPattern:result"]
+
+                    Pattern "insideStraw" "inside" 
+                        "color inside" [0.6 0.45 0.18]
+
+                    Bxdf "PxrDiffuse" "diffuseShader" 
+                        "reference color diffuseColor" ["inside:Cout"]
+
+                    ReverseOrientation
+                    Cylinder 0.18 0 20 360
+                    ReverseOrientation
+                AttributeEnd
+
+                # Top cap
+                AttributeBegin
+                    Attribute "dice" "float micropolygonlength" [0.5]
+                    Attribute "displacementbound" "sphere" [0.5]
+
+                    Pattern "capStraw" "cap" 
+                        "color straw" [0.8 0.65 0.38]
+                        "color colorful" [0.0 0 0.7]
+                        "float major_radius" [0.18]
+
+                    Bxdf "PxrDiffuse" "diffuseShader" 
+                        "reference color diffuseColor" ["cap:Cout"]
+
+                    Pattern "capDisplacement" "capDisplacementPattern"
+                        "float major_radius" [0.18]
+
+                    Displace "PxrDisplace" "capDisp" 
+                        "reference float dispScalar" ["capDisplacementPattern:result"]
+
+                    Translate 0 0 0.00
+                    Scale 1 1 0.1
+                    Torus 0.18 0.015 0 360 360
+                AttributeEnd
+
+                # Bottom cap
+                AttributeBegin
+                    Pattern "capStraw" "cap" 
+                        "color caps" [1 1 0.9]
+
+                    Bxdf "PxrDiffuse" "diffuseShader" 
+                        "reference color diffuseColor" ["cap:Cout"]
+
+                    Translate 0 0 20
+                    Scale 1 1 0.01
+                    Torus 0.18 0.015 0 360 360 
+                AttributeEnd
+
+            TransformEnd
+        AttributeEnd
+
 
         #Table geometry
         AttributeBegin
             TransformBegin
                 Translate 0 -5 10
-                Rotate 40 1 0 0
-                Rotate 10 0 0 1 
+                #Rotate 40 1 0 0
+                #Rotate 10 0 0 1 
                 Scale 3 2 1
                 
 
@@ -278,6 +389,19 @@ WorldBegin
                 Patch "bilinear" "P" [ -10 -10 -2.15  -10 10 -2.15  10 -10 -2.15 10 10 -2.15]
             TransformEnd
          AttributeEnd
+
+
+        # #block
+        # AttributeBegin
+        #     TransformBegin
+        #         Translate -1.5 -30 0
+        #         Rotate 90 1 0 0
+        #         Scale 2 2 2
+        #         #Attribute "visibility" "int camera" [0] 
+        #         Patch "bilinear" "P" [ -10 -10 -2.15  -10 10 -2.15  10 -10 -2.15 10 10 -2.15]
+        #     TransformEnd
+        #  AttributeEnd
+
 
     TransformEnd
 

@@ -1,15 +1,14 @@
-##RenderMan RIB
-##bbox: -1.26866221 -2.39994407 6.06821251 1.21654403 1.39084303 8.74702644
-# RenderMan 26.2 build 2336968
-# Export: /home/s5725067/maya/projects/sem2_testProject/scenes/coffee.rib
-version 3.04999995
-ObjectBegin "1b726edc-372b-11f0-ae09-047c16991475" 
-	Attribute "Ri" "string Orientation" ["outside"]
-	Attribute "dice" "float micropolygonlength" [1] "int rasterorient" [1] "string referencecamera" [""] "string strategy" ["instanceprojection"] "int watertight" [0]
-	Attribute "displacementbound" "string CoordinateSystem" ["object"] "float sphere" [0.100000001]
-	Attribute "identifier" "string object" ["coffeeShape"]
-	Attribute "polygon" "int smoothdisplacement" [0]
-	Attribute "trace" "int autobias" [1] "float bias" [0.00999999978] "int displacements" [1]
+## coffee.rib (modified)
+
+ObjectBegin "coffeeCup"
+    Attribute "Ri" "string Orientation" ["outside"]
+    Attribute "dice" "float micropolygonlength" [1]
+    Attribute "displacementbound" "string CoordinateSystem" ["object"] "float sphere" [0.1]
+    Attribute "identifier" "string object" ["coffeeShape"]
+    Attribute "polygon" "int smoothdisplacement" [0]
+    Attribute "trace" "int autobias" [1] "float bias" [0.01] "int displacements" [1]
+
+	
 	PointsGeneralPolygons [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 		1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 		1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
@@ -11418,26 +11417,5 @@ ObjectBegin "1b726edc-372b-11f0-ae09-047c16991475"
 		0.400000006 0.899999976 0.425000012 0.899999976 0.400000006 0.899999976 0.375 0.899999976 0.375 0.899999976 0.400000006 0.899999976
 		0.375 0.899999976 0.349999994 0.899999976 0.349999994 0.899999976 0.375 0.899999976 0.349999994 0.899999976 0.324999988 0.899999976
 		0.324999988 0.899999976 0.349999994 0.899999976 0.324999988 0.899999976 0.300000012 0.899999976 0.300000012 0.899999976 0.324999988 0.899999976]
+
 ObjectEnd 
-AttributeBegin 
-	TransformBegin 
-		Transform [ -0.994880736 0 0.1010563 0  0.0058847391 0.998303056 0.0579341762 0  -0.10088481 0.0582322851 -0.993192434 0  -0.996888459 -0.903780699 -8.26971912 1 ]
-		ScopedCoordinateSystem "perspShape"
-	TransformEnd 
-	TransformBegin 
-		Transform [ -0.994880736 0 0.1010563 0  0.0058847391 0.998303056 0.0579341762 0  -0.10088481 0.0582322851 -0.993192434 0  -0.996888459 -0.903780699 -8.26971912 1 ]
-		ScopedCoordinateSystem "persp"
-	TransformEnd 
-	Attribute "Ri" "int Sides" [2]
-	Attribute "dice" "string referencecamera" [""]
-	Attribute "grouping" "string membership" ["World"]
-	Attribute "identifier" "string name" ["|coffee|coffeeShape"] "int id" [1180284186] "int id2" [0]
-	Attribute "lightfilter" "string subset" [""]
-	Attribute "lighting" "int mute" [0] "string excludesubset" [""]
-	Attribute "shade" "float relativepixelvariance" [1]
-	Attribute "trace" "int maxdiffusedepth" [1] "int maxspeculardepth" [4]
-	Attribute "user" "string bakingIdentifier" ["_coffee_coffeeShape"]
-	Attribute "visibility" "int camera" [1] "int indirect" [1] "int transmission" [1]
-	Transform [ 4.6322403 0 0 0  0 4.62551928 -0.249446198 0  0 0.249446198 4.62551928 0  -0.0260591023 -2.34949207 7.50711393 1 ]
-	ObjectInstance "1b726edc-372b-11f0-ae09-047c16991475" 
-AttributeEnd 
