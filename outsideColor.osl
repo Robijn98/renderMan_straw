@@ -167,19 +167,23 @@ shader strawStripes
     
         //darken color up to stains -------------------------------------------------
         
-        stainMask = (v > stain_area_start + stain_area_rad) ? 1.0 : 0.0;
-        
-        float stainMask_top = (v > 0.0 && v < 0.03) ? 1.0 : 0.0;
-        
+        float edge_noise = noise("perlin", worldPos * 1.0); 
+        float edge_offset = (edge_noise - 0.5) * 0.1; 
+
+        stainMask = (v > stain_area_start + stain_area_rad + edge_offset) ? 1.0 : 0.0;
+
+        float stainMask_top = (v > 0.0 && v < 0.03 + edge_offset) ? 1.0 : 0.0;
+
         stainMask += stainMask_top;
+
+        // Apply color variation
         float colorShift = noise("simplex", worldPos * color_noise_scale);
-        
         varied_coffee = coffee + color_variation_amount * (colorShift - 0.5);
 
-        
         varied_coffee = varied_coffee + 0.6;
         stain = mix(color(1.0), varied_coffee, stainMask);
         Cout *= stain;
+        
         
         //coffee splat / dots -----------------------------------------------------------
         float stain_growth = 1.2; 

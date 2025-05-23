@@ -21,54 +21,67 @@ WorldBegin
         Rotate -90 1 0 0
         Rotate 30 0 0 1
 
-        Light "PxrDomeLight" "domeLight" "string lightColorMap" ["./textures/photo_studio_01_4k.tx"]
+        Light "PxrDomeLight" "domeLight" "string lightColorMap" ["./textures/warm_restaurant_4k.tx"]
             "float exposure" [-1.5]
 
 
-        
+    
     AttributeEnd    
     # Top-level transform
     TransformBegin
-        Translate 5 2 25
+        Translate 5 2 17
         
-        Rotate 90 1 0 0
+        Rotate 85 1 0 0
 
+
+        # AttributeBegin
+        #     Attribute "visibility" "int camera" [0] "int indirect" [0] "int transmission" [0]
+
+        #     TransformBegin
+        #         Translate 10 60 -14
+                
+        #         Scale 20 10 10      
+
+        #         Light "PxrSphereLight" "light1" 
+        #             "color lightColor" [1 1 1]
+        #             "float intensity" [0.1]
+        #             "int enableShadows" [0]
+        #     TransformEnd
+
+        # AttributeEnd
         
-    
-        
-        
+
     ReadArchive "coffee.rib"
 
-    AttributeBegin
-        TransformBegin
-            Translate -1 -2 8
-            Rotate -90 1 0 0
-            Scale 15 15 15
+    TransformBegin
+        # Coffee cup
+        Translate 0 12 0
+        Rotate 5 1 0 0
+    
+        AttributeBegin
+            TransformBegin
+                Translate -1 -2 8
+                Rotate -90 1 0 0
+                Scale 15 15 15
 
-    # Bxdf "PxrSurface" "plasticShader"
-    #         "float diffuseGain" [0.0]           
-    #         "color diffuseColor" [0 0 0]           
-    #         "color specularFaceColor" [1.0 1.0 1.0]
-    #         "color specularEdgeColor" [0 0 0]
-    #         "float specularRoughness" [0.01]    
-    #         "float refractionGain" [1.0]          
-    #         "color refractionColor" [1.0 1.0 1.0]
-    #         "color specularIor" [1.5 1.5 1.5]
-    #         "float presence" [1.0]
 
-    Bxdf "PxrSurface" "myGlassShader"
-    "color diffuseColor" [0 0 0]
-    "float diffuseGain" [0.0]
-    "float refractionGain" [1.0]
-    "color refractionColor" [1 1 1]
-    "color specularFaceColor" [1 1 1]
-    "float specularRoughness" [0.1]    
+        Bxdf "PxrDisneyBsdf" "plasticMaterial"
+            "color baseColor" [0.9 0.9 0.9]
+            "int transmissionBehavior" 1
+            "float specTrans" 1
+            "float roughness" 0.0
+            "int isThin"  1
+            "int shadowBumpTerminator" 1
+            "float presence" 0.95
+            
 
 
             ObjectInstance "coffeeCup"
-
-        TransformEnd
-    AttributeEnd
+            #Sphere 0.5 -1 1 360
+            TransformEnd
+        
+        
+        AttributeEnd
 
 
 
@@ -77,7 +90,8 @@ WorldBegin
             TransformBegin
                 
                 #proper transformation
-                Translate -1 -2 -6
+                Translate -1 -2 -7.2
+                Scale 0.75 0.75 0.75
                 
                 # Outer cylinder
                 AttributeBegin
@@ -176,7 +190,9 @@ WorldBegin
             TransformBegin
                 
                 #proper transformation
-                Translate -0.8 -2.4 -6
+                
+                Translate -0.6 -2.4 -7.2
+                Scale 0.75 0.75 0.75
                 Rotate -8 0 1 0
                 
                 # Outer cylinder
@@ -274,7 +290,8 @@ WorldBegin
             TransformBegin
                 
                 #proper transformation
-                Translate -0.4 -1.6 -6
+                Translate -0.4 -1.6 -7.2
+                Scale 0.75 0.75 0.75
                 Rotate -6 0 1 0
                 
                 # Outer cylinder
@@ -367,6 +384,7 @@ WorldBegin
             TransformEnd
         AttributeEnd
 
+        TransformEnd
 
         #Table geometry
         AttributeBegin
@@ -391,18 +409,7 @@ WorldBegin
          AttributeEnd
 
 
-        # #block
-        # AttributeBegin
-        #     TransformBegin
-        #         Translate -1.5 -30 0
-        #         Rotate 90 1 0 0
-        #         Scale 2 2 2
-        #         #Attribute "visibility" "int camera" [0] 
-        #         Patch "bilinear" "P" [ -10 -10 -2.15  -10 10 -2.15  10 -10 -2.15 10 10 -2.15]
-        #     TransformEnd
-        #  AttributeEnd
-
-
+    
     TransformEnd
 
 WorldEnd
