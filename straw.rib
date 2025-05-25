@@ -1,7 +1,5 @@
 Display "straw.exr" "file" "rgb"
 
-#Format 4096 2160 1.0
-#Format 1920 1080 1.0
 Format 2560 1440 1.0
 
 Projection "perspective" "uniform float fov" [45]
@@ -26,30 +24,12 @@ WorldBegin
             "float exposure" [-1.5]
 
 
-    
     AttributeEnd    
     # Top-level transform
     TransformBegin
         Translate 5 2 17
         
         Rotate 85 1 0 0
-
-
-        # AttributeBegin
-        #     Attribute "visibility" "int camera" [0] "int indirect" [0] "int transmission" [0]
-
-        #     TransformBegin
-        #         Translate 10 60 -14
-                
-        #         Scale 20 10 10      
-
-        #         Light "PxrSphereLight" "light1" 
-        #             "color lightColor" [1 1 1]
-        #             "float intensity" [0.1]
-        #             "int enableShadows" [0]
-        #     TransformEnd
-
-        # AttributeEnd
         
 
     ReadArchive "coffee.rib"
@@ -60,26 +40,26 @@ WorldBegin
         Rotate 5 1 0 0
     
         AttributeBegin
+            
             TransformBegin
                 Translate -1 -2 8
                 Rotate -90 1 0 0
                 Scale 15 15 15
-    # Attribute "trace" "maxspeculardepth" [10]
-    # Attribute "trace" "maxdiffusedepth" [4]
-
-        Bxdf "PxrDisneyBsdf" "plasticMaterial"
-            "color baseColor" [0.9 0.9 0.9]
-            "int transmissionBehavior" 1
-            "float specTrans" 1
-            "float roughness" 0.01
-            "int isThin"  1
-            "int shadowBumpTerminator" 1
-            "float presence" 1.0
-            
 
 
-            ObjectInstance "coffeeCup"
-            #Sphere 0.5 -1 1 360
+            Bxdf "PxrDisneyBsdf" "plasticMaterial"
+                "color baseColor" [0.9 0.9 0.9]
+                "int transmissionBehavior" 1
+                "float specTrans" 1
+                "float roughness" 0.01
+                "int isThin"  1
+                "int shadowBumpTerminator" 1
+                "float presence" 1.0
+                
+
+
+                ObjectInstance "coffeeCup"
+
             TransformEnd
         
         
@@ -392,12 +372,8 @@ WorldBegin
         AttributeBegin
             TransformBegin
                 Translate 0 -5 10
-                #Rotate 40 1 0 0
-                #Rotate 10 0 0 1 
-                Scale 3 2 1
-                
 
-                #Scale 20 1 10
+                Scale 3 2 1
 
                 Attribute "displacementbound" "sphere" [0.5] "coordinatesystem" ["object"]
                 
@@ -410,8 +386,6 @@ WorldBegin
             TransformEnd
          AttributeEnd
 
-
-    
     TransformEnd
 
 WorldEnd

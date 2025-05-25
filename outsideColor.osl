@@ -1,4 +1,7 @@
-//https://github.com/Maxon-Computer/Redshift-OSL-Shaders/blob/main/Dots.osl
+
+//function dotPattern adapted from: 
+// Z. Anderson, 2021, Inc. Redshift Rendering Technlogies
+// available from: https://github.com/Maxon-Computer/Redshift-OSL-Shaders/blob/main/Dots.osl
 
 float dotPattern(point pos, float scale, float radius)
 {
