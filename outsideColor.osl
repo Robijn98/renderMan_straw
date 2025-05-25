@@ -58,7 +58,7 @@ shader strawStripes
     
     //coloured helix --------------------------------------
     //noise border --------------------------
-
+    // helix pattern was adviced by Harry on how to approach
     color helix_offset = helix + 0.08;
     float twists = 1.0;
     float helix_width = 0.23;
